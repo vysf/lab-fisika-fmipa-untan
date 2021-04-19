@@ -101,16 +101,7 @@ exports.getAllRegisters = async function (req, res, next) {
 
 exports.updateRegisters = async function (req, res, next) {
   try {
-    // const error = validationResult(req);
-    // if (!error.isEmpty()) {
-    //   return res.status(400).json({ message: error.array() });
-    // }
-
     const id = req.params.id;
-    // const nama = req.body.nama;
-    // const nim = req.body.nim;
-    // const prodi = req.body.prodi;
-    // const hp = req.body.hp;
     const status = req.body.status;
     await model.bebasLab
       .update(
