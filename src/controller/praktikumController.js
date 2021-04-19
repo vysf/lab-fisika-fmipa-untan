@@ -38,7 +38,12 @@ exports.createPraktikan = async function (req, res, next) {
         ketua: ketua,
       })
       .then((result) => {
-        mail(result, "praktikum");
+        mail(
+          result,
+          "PRAKTIKUM",
+          "Konfirmasi Pendaftaran Praktikum Lab Fisika",
+          "Pendaftaran Praktikum Fisika Dasar"
+        );
 
         res.status(200).json({
           message: "Praktikan berhasil mendaftar",

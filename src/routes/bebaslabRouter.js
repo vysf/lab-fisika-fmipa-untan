@@ -4,17 +4,13 @@ const bebaslabController = require("../controller/bebaslabController");
 const bebaslabValidator = require("../middleware/bebaslabValidator");
 
 router.post(
-  "/registration",
+  "/registers",
   bebaslabValidator.registerValidator,
   bebaslabController.createRegister
 );
 
 router.get("/registers", bebaslabController.getAllRegisters);
 
-// router.patch(
-//   "/registers/:id",
-//   bebaslabValidator.registerValidator,
-//   bebaslabController.updateRegisters
-// );
+router.put("/registers/:id", bebaslabController.updateRegisters);
 
 module.exports = router;

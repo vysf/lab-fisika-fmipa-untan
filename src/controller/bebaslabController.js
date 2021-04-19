@@ -28,7 +28,12 @@ exports.createRegister = async function (req, res, next) {
       })
       .then((result) => {
         model.bebasLab.findOne({ where: { nim: result.nim } }).then((data) => {
-          mail(result, "bebas lab");
+          mail(
+            data,
+            "BEBAS_LAB",
+            "Konfirmasi Pendaftaran Surat Bebas Lab Fisika",
+            "Pendaftaran Surat Bebas Lab Fisika"
+          );
         });
 
         res.status(200).json({
@@ -94,37 +99,44 @@ exports.getAllRegisters = async function (req, res, next) {
   }
 };
 
-// exports.updateRegisters = async function (req, res, next) {
-//   try {
-//     const error = validationResult(req);
-//     if (!error.isEmpty()) {
-//       return res.status(400).json({ message: error.array() });
-//     }
+exports.updateRegisters = async function (req, res, next) {
+  try {
+    // const error = validationResult(req);
+    // if (!error.isEmpty()) {
+    //   return res.status(400).json({ message: error.array() });
+    // }
 
-//     const id = req.params.id;
-//     const nama = req.body.nama;
-//     const nim = req.body.nim;
-//     const prodi = req.body.prodi;
-//     const hp = req.body.hp;
-//     await model.bebasLab
-//       .update(
-//         {
-//           nama: nama,
-//           nim: nim,
-//           prodi: prodi,
-//           hp: hp,
-//         },
-//         { where: { id: id } }
-//       )
-//       .then((result) => {
-//         res.status(200).json({
-//           message: "Mahasiswa berhasil diubah",
-//           data: result,
-//         });
-//       });
-//   } catch (error) {
-//     res.status(404).json({
-//       message: error,
-//     });
-//   }
-// };
+    const id = req.params.id;
+    // const nama = req.body.nama;
+    // const nim = req.body.nim;
+    // const prodi = req.body.prodi;
+    // const hp = req.body.hp;
+    const status = req.body.status;
+    await model.bebasLab
+      .update(
+        {
+          status: status,
+        },
+        { where: { id: id } }
+      )
+      .then((result) => {
+        model.bebasLab.findOne({ where: { id: id } }).then((data) => {
+          mail(
+            data,
+            "BEBAS_LAB",
+            "Konfirmasi Update Surat Bebas Lab Fisika",
+            "Update Surat Bebas Lab Fisika"
+          );
+        });
+
+        res.status(200).json({
+          message: "Mahasiswa berhasil diubah",
+          data: result,
+        });
+      });
+  } catch (error) {
+    res.status(404).json({
+      message: error,
+    });
+  }
+};

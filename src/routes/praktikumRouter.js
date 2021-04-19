@@ -4,7 +4,7 @@ const praktikumController = require("../controller/praktikumController");
 const praktikanValidator = require("../middleware/praktikumValidator");
 
 router.post(
-  "/registration",
+  "/praktikan",
   praktikanValidator.praktikanValidator,
   praktikumController.createPraktikan
 );

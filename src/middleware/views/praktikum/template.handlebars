@@ -83,6 +83,7 @@
         table {
             border-collapse: collapse;
             width: 100%;
+            color: rgba(0, 0, 0, 0.885);
         }
 
         td,
@@ -149,6 +150,10 @@
             padding-bottom: 10px;
         }
 
+        .status {
+            font-weight: bold;
+        }
+
         @media screen and (max-width: 600px) {
             p {
                 color: black;
@@ -201,7 +206,7 @@
                 </p>
                 <hr />
                 <p>
-                    <span class="konfirmasi">Pendaftaran Praktikum Fisika Dasar</span>
+                    <span class="konfirmasi">{{konfirmasi}}</span>
                 </p>
                 <table>
                     <tr>
@@ -222,7 +227,7 @@
                     </tr>
                     <tr>
                         <th>Keterangan</th>
-                        <th>{{keterangan}}</th>
+                        <th class="status">{{keterangan}}</th>
                     </tr>
                 </table>
                 <hr />
