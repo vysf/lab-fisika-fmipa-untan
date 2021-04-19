@@ -13,6 +13,10 @@ const mysql = {
 const db = new Sequelize(mysql.database, mysql.user, mysql.password, {
   host: mysql.host,
   dialect: "mysql",
+  dialectOptions: {
+    useUTC: false,
+  },
+  timezone: "+07:00",
   pool: {
     max: 150, // Maximum number of connection in pool
     min: 10, // Minimum number of connection in pool

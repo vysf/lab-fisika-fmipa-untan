@@ -6,6 +6,8 @@ const dotenv = require("dotenv");
 const bebaslabRouter = require("./src/routes/bebaslabRouter");
 const praktikumRouter = require("./src/routes/praktikumRouter");
 
+const botTelegram = require("./src/telegram/bot");
+
 const app = express();
 
 dotenv.config();
@@ -24,6 +26,8 @@ app.use(
 // Grouping
 app.use("/v1/bebaslab", bebaslabRouter);
 app.use("/v1/praktikum", praktikumRouter);
+
+// app.use("/v1/bot", botTelegram);
 
 const port = Number(process.env.PORT || 3331);
 
