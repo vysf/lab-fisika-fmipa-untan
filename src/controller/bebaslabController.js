@@ -2,9 +2,21 @@ const model = require("../model/index");
 const { v4: uuidv4 } = require("uuid");
 const { validationResult } = require("express-validator");
 const mail = require("../middleware/mailer");
+const dotenv = require("dotenv");
+dotenv.config();
 
 exports.createRegister = async function (req, res, next) {
   try {
+    const api_key = req.query.k;
+    let isApiKey = false;
+    if (api_key === process.env.API_KEY) {
+      isApiKey = true;
+    } else {
+      res.status(401).json({
+        message: "Unauthorization",
+      });
+    }
+
     const error = validationResult(req);
     if (!error.isEmpty()) {
       return res.status(400).json({ message: error.array() });
@@ -55,6 +67,16 @@ exports.createRegister = async function (req, res, next) {
 
 exports.getAllRegisters = async function (req, res, next) {
   try {
+    const api_key = req.query.k;
+    let isApiKey = false;
+    if (api_key === process.env.API_KEY) {
+      isApiKey = true;
+    } else {
+      res.status(401).json({
+        message: "Unauthorization",
+      });
+    }
+
     let page = parseInt(req.query.page) || 1;
     let limit = parseInt(req.query.limit) || 5;
 
@@ -101,6 +123,16 @@ exports.getAllRegisters = async function (req, res, next) {
 
 exports.updateRegisters = async function (req, res, next) {
   try {
+    const api_key = req.query.k;
+    let isApiKey = false;
+    if (api_key === process.env.API_KEY) {
+      isApiKey = true;
+    } else {
+      res.status(401).json({
+        message: "Unauthorization",
+      });
+    }
+
     const id = req.params.id;
     const status = req.body.status;
     await model.bebasLab
