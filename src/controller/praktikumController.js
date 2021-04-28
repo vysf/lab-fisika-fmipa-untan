@@ -141,7 +141,7 @@ exports.getAllModules = (req, res) => {
     });
   }
 
-  const baseUrl = "http://localhost:5000/v1/praktikum/files";
+  const baseUrl = `${process.env.API_URL}/v1/praktikum/files`;
   const directoryPath = "./resources/modul/";
 
   fs.readdir(directoryPath, function (err, files) {

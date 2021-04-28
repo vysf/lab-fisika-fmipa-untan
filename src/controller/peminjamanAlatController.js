@@ -11,7 +11,7 @@ exports.getAllLetter = (req, res) => {
     });
   }
 
-  const baseUrl = "http://localhost:5000/v1/peminjamanalat/files";
+  const baseUrl = `${process.env.API_URL}/v1/peminjamanalat/files`;
   const directoryPath = "./resources/peminjaman alat/";
 
   fs.readdir(directoryPath, function (err, files) {
