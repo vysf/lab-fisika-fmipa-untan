@@ -11,5 +11,6 @@ router.post(
 
 router.get("/praktikan", praktikumController.getAllPraktikan);
 
-router.get("/downloads/:file", praktikumController.downloadModul);
+router.get("/files", praktikumController.getAllModules);
+router.get("/files/:file", praktikumController.downloadModules);
 module.exports = router;

@@ -2,6 +2,7 @@ const model = require("../model/index");
 const { v4: uuidv4 } = require("uuid");
 const { validationResult } = require("express-validator");
 const mail = require("../middleware/mailer");
+const fs = require("fs");
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -131,12 +132,55 @@ exports.getAllPraktikan = async function (req, res, next) {
   }
 };
 
-exports.downloadModul = (res, req) => {
+exports.getAllModules = (req, res) => {
+  const api_key = req.query.k;
+  let isApiKey = api_key === process.env.API_KEY;
+  if (!isApiKey) {
+    res.status(401).json({
+      message: "Unauthorization",
+    });
+  }
+
+  const baseUrl = "http://localhost:5000/v1/praktikum/files";
+  const directoryPath = "./resources/modul/";
+
+  fs.readdir(directoryPath, function (err, files) {
+    if (err) {
+      res.status(500).json({
+        message: "Unable to scan files!",
+      });
+    }
+
+    let fileInfos = [];
+
+    files.forEach((file) => {
+      fileInfos.push({
+        name: file,
+        url: `${baseUrl}/${file}?k=${process.env.API_KEY}`,
+      });
+    });
+
+    res.status(200).json({
+      message: "Modul berhasil ditampilkan",
+      fileInfos,
+    });
+  });
+};
+
+exports.downloadModules = (req, res) => {
+  const api_key = req.query.k;
+  let isApiKey = api_key === process.env.API_KEY;
+  if (!isApiKey) {
+    res.status(401).json({
+      message: "Unauthorization",
+    });
+  }
+
   const modulName = req.params.file;
-  const directoryPath = __dirname + "resources/modul/";
+  const directoryPath = "./resources/modul/";
   res.download(directoryPath + modulName, modulName, (err) => {
     if (err) {
-      res.status(500).send({
+      res.status(500).json({
         message: "Could not download the file. " + err,
       });
     }
