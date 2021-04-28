@@ -130,3 +130,15 @@ exports.getAllPraktikan = async function (req, res, next) {
     });
   }
 };
+
+exports.downloadModul = (res, req) => {
+  const modulName = req.params.file;
+  const directoryPath = __dirname + "resources/modul/";
+  res.download(directoryPath + modulName, modulName, (err) => {
+    if (err) {
+      res.status(500).send({
+        message: "Could not download the file. " + err,
+      });
+    }
+  });
+};
