@@ -8,10 +8,9 @@ dotenv.config();
 exports.createRegister = async function (req, res, next) {
   try {
     const api_key = req.query.k;
-    let isApiKey = false;
-    if (api_key === process.env.API_KEY) {
-      isApiKey = true;
-    } else {
+    let isApiKey = api_key === process.env.API_KEY;
+    if (!isApiKey) {
+      // res.redirect("URL_FRONT_END");
       res.status(401).json({
         message: "Unauthorization",
       });
@@ -68,10 +67,8 @@ exports.createRegister = async function (req, res, next) {
 exports.getAllRegisters = async function (req, res, next) {
   try {
     const api_key = req.query.k;
-    let isApiKey = false;
-    if (api_key === process.env.API_KEY) {
-      isApiKey = true;
-    } else {
+    let isApiKey = api_key === process.env.API_KEY;
+    if (!isApiKey) {
       res.status(401).json({
         message: "Unauthorization",
       });
@@ -124,10 +121,8 @@ exports.getAllRegisters = async function (req, res, next) {
 exports.updateRegisters = async function (req, res, next) {
   try {
     const api_key = req.query.k;
-    let isApiKey = false;
-    if (api_key === process.env.API_KEY) {
-      isApiKey = true;
-    } else {
+    let isApiKey = api_key === process.env.API_KEY;
+    if (!isApiKey) {
       res.status(401).json({
         message: "Unauthorization",
       });

@@ -8,10 +8,8 @@ dotenv.config();
 exports.createPraktikan = async function (req, res, next) {
   try {
     const api_key = req.query.k;
-    let isApiKey = false;
-    if (api_key === process.env.API_KEY) {
-      isApiKey = true;
-    } else {
+    let isApiKey = api_key === process.env.API_KEY;
+    if (!isApiKey) {
       res.status(401).json({
         message: "Unauthorization",
       });
@@ -77,10 +75,8 @@ exports.createPraktikan = async function (req, res, next) {
 exports.getAllPraktikan = async function (req, res, next) {
   try {
     const api_key = req.query.k;
-    let isApiKey = false;
-    if (api_key === process.env.API_KEY) {
-      isApiKey = true;
-    } else {
+    let isApiKey = api_key === process.env.API_KEY;
+    if (!isApiKey) {
       res.status(401).json({
         message: "Unauthorization",
       });
