@@ -156,7 +156,7 @@ exports.getAllModules = (req, res) => {
     files.forEach((file) => {
       fileInfos.push({
         name: file,
-        url: `${baseUrl}/${file}?k=${process.env.API_KEY}`,
+        url: `${baseUrl}/${file}`,
       });
     });
 
@@ -168,14 +168,6 @@ exports.getAllModules = (req, res) => {
 };
 
 exports.downloadModules = (req, res) => {
-  const api_key = req.query.k;
-  let isApiKey = api_key === process.env.API_KEY;
-  if (!isApiKey) {
-    res.status(401).json({
-      message: "Unauthorization",
-    });
-  }
-
   const modulName = req.params.file;
   const directoryPath = "./resources/modul/";
   res.download(directoryPath + modulName, modulName, (err) => {

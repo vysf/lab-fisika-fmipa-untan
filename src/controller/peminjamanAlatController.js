@@ -26,7 +26,7 @@ exports.getAllLetter = (req, res) => {
     files.forEach((file) => {
       fileInfos.push({
         name: file,
-        url: `${baseUrl}/${file}?k=${process.env.API_KEY}`,
+        url: `${baseUrl}/${file}`,
       });
     });
 
@@ -38,14 +38,6 @@ exports.getAllLetter = (req, res) => {
 };
 
 exports.downloadLetter = (req, res) => {
-  const api_key = req.query.k;
-  let isApiKey = api_key === process.env.API_KEY;
-  if (!isApiKey) {
-    res.status(401).json({
-      message: "Unauthorization",
-    });
-  }
-
   const modulName = req.params.file;
   const directoryPath = "./resources/peminjaman alat/";
   res.download(directoryPath + modulName, modulName, (err) => {
