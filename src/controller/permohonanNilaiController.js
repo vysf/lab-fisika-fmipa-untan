@@ -4,6 +4,8 @@ const { validationResult } = require("express-validator");
 const dotenv = require("dotenv");
 dotenv.config();
 
+// const notifikasi = require("../telegram/bot");
+
 exports.createPemohonNilai = async function (req, res, next) {
   try {
     const api_key = req.query.k;
@@ -40,6 +42,7 @@ exports.createPemohonNilai = async function (req, res, next) {
         tahun: tahun,
       })
       .then((result) => {
+        // notifikasi(result, "PERMOHONAN NILAI");
         res.status(200).json({
           message: "Pemohon berhasil mendaftar",
           data: result,
