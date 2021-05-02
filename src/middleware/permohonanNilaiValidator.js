@@ -1,6 +1,7 @@
 const { check } = require("express-validator");
 
 exports.pemohonValidator = [
+  check("tahun").not().isEmpty().withMessage("Tahun tidak boleh kosong"),
   check("email")
     .isEmail()
     .withMessage("Email tidak valid")
