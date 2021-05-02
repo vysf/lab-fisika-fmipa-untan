@@ -6,6 +6,7 @@ const dotenv = require("dotenv");
 const bebaslabRouter = require("./src/routes/bebaslabRouter");
 const praktikumRouter = require("./src/routes/praktikumRouter");
 const peminjamanAlatRouter = require("./src/routes/peminjamanAlatRouter");
+const permohonanNilaiRouter = require("./src/routes/permohonanNilaiRouter");
 
 const botTelegram = require("./src/telegram/bot");
 
@@ -28,6 +29,7 @@ app.use(
 app.use("/v1/bebaslab", bebaslabRouter);
 app.use("/v1/praktikum", praktikumRouter);
 app.use("/v1/peminjamanalat", peminjamanAlatRouter);
+app.use("/v1/permohonannilai", permohonanNilaiRouter);
 
 // app.use("/v1/bot", botTelegram);
 
