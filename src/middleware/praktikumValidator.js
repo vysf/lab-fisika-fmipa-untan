@@ -7,10 +7,26 @@ exports.praktikanValidator = [
   //     .not()
   //     .isEmpty()
   //     .withMessage("Keterangan tidak boleh kosong"),
-  //   check("praktikum")
-  //     .not()
-  //     .isEmpty()
-  //     .withMessage("Praktikum tidak boleh kosong"),
+  check("praktikum")
+    .not()
+    .isEmpty()
+    .withMessage("Praktikum tidak boleh kosong")
+    .custom((praktikumExist, { req }) => {
+      return new Promise((resolve, reject) => {
+        model.praktikumLab
+          .findAll({ attributes: ["praktikum", "nim"] })
+          .then((result) => {
+            if (
+              result[0].dataValues.praktikum === praktikumExist &&
+              result[0].dataValues.nim === req.body.nim
+            ) {
+              reject(new Error("Praktikan sudah terdaftar"));
+            } else {
+              resolve(true);
+            }
+          });
+      });
+    }),
   check("reguler").not().isEmpty().withMessage("Reguler tidak boleh kosong"),
   check("email")
     .isEmail()
@@ -30,12 +46,15 @@ exports.praktikanValidator = [
     .withMessage("NIM tidak boleh kosong")
     .isLength({ max: 11 })
     .withMessage("Masukkan NIM yang benar")
-    .custom((nimExist) => {
+    .custom((nimExist, { req }) => {
       return new Promise((resolve, reject) => {
         model.praktikumLab
-          .findOne({ where: { nim: nimExist } })
+          .findAll({ attributes: ["nim", "praktikum"] })
           .then((result) => {
-            if (result !== null) {
+            if (
+              result[0].dataValues.nim === nimExist &&
+              result[0].dataValues.praktikum === req.body.praktikum
+            ) {
               reject(new Error("Praktikan sudah terdaftar"));
             } else {
               resolve(true);
