@@ -14,15 +14,17 @@ exports.praktikanValidator = [
     .custom((praktikumExist, { req }) => {
       return new Promise((resolve, reject) => {
         model.praktikumLab
-          .findAll({ attributes: ["praktikum", "nim"] })
+          .findOne({ where: { praktikum: praktikumExist, nim: req.body.nim } })
           .then((result) => {
-            if (
-              result[0].dataValues.praktikum === praktikumExist &&
-              result[0].dataValues.nim === req.body.nim
-            ) {
-              reject(new Error("Praktikan sudah terdaftar"));
-            } else {
+            if (result === null) {
               resolve(true);
+            } else {
+              if (
+                result.dataValues.praktikum === praktikumExist &&
+                result.dataValues.nim === req.body.nim
+              ) {
+                reject(new Error("Praktikan sudah terdaftar"));
+              }
             }
           });
       });
@@ -49,15 +51,17 @@ exports.praktikanValidator = [
     .custom((nimExist, { req }) => {
       return new Promise((resolve, reject) => {
         model.praktikumLab
-          .findAll({ attributes: ["nim", "praktikum"] })
+          .findOne({ where: { nim: nimExist, praktikum: req.body.praktikum } })
           .then((result) => {
-            if (
-              result[0].dataValues.nim === nimExist &&
-              result[0].dataValues.praktikum === req.body.praktikum
-            ) {
-              reject(new Error("Praktikan sudah terdaftar"));
-            } else {
+            if (result === null) {
               resolve(true);
+            } else {
+              if (
+                result.dataValues.nim === nimExist &&
+                result.dataValues.praktikum === req.body.praktikum
+              ) {
+                reject(new Error("Praktikan sudah terdaftar"));
+              }
             }
           });
       });
