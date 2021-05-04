@@ -20,10 +20,10 @@ const mail = async (data, mode, subject, confirm) => {
     hbs({
       viewEngine: {
         extName: ".handlebars",
-        partialsDir: __dirname + "/views/",
+        partialsDir: "./resources/views",
         defaultLayout: false,
       },
-      viewPath: __dirname + "/views/",
+      viewPath: "./resources/views",
       extName: ".handlebars",
     })
   );
