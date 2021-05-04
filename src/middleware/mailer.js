@@ -11,8 +11,8 @@ const mail = async (data, mode, subject, confirm) => {
       user: process.env.EMAIL,
       pass: process.env.PASS,
     },
-    logger: true,
-    debug: true,
+    // logger: true,
+    // debug: true,
   });
 
   transporter.use(
