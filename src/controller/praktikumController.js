@@ -1,4 +1,5 @@
 const model = require("../model/index");
+const { Op } = require("sequelize");
 const { v4: uuidv4 } = require("uuid");
 const { validationResult } = require("express-validator");
 const mail = require("../middleware/mailer");
@@ -8,16 +9,9 @@ dotenv.config();
 
 exports.createPraktikan = async function (req, res, next) {
   try {
-    const api_key = req.query.k;
-    let isApiKey = api_key === process.env.API_KEY;
-    if (!isApiKey) {
-      res.status(401).json({
-        message: "Unauthorization",
-      });
-    }
-
     const error = validationResult(req);
     if (!error.isEmpty()) {
+      console.log(error.array());
       return res.status(400).json({ message: error.array() });
     }
 
@@ -49,12 +43,12 @@ exports.createPraktikan = async function (req, res, next) {
         ketua: ketua,
       })
       .then((result) => {
-        mail(
-          result,
-          "PRAKTIKUM",
-          "Konfirmasi Pendaftaran Praktikum Lab Fisika",
-          "Pendaftaran Praktikum Fisika Dasar"
-        );
+        // mail(
+        //   result,
+        //   "PRAKTIKUM",
+        //   "Konfirmasi Pendaftaran Praktikum Lab Fisika",
+        //   "Pendaftaran Praktikum Fisika Dasar"
+        // );
 
         res.status(200).json({
           message: "Praktikan berhasil mendaftar",
@@ -75,14 +69,6 @@ exports.createPraktikan = async function (req, res, next) {
 
 exports.getAllPraktikan = async function (req, res, next) {
   try {
-    const api_key = req.query.k;
-    let isApiKey = api_key === process.env.API_KEY;
-    if (!isApiKey) {
-      res.status(401).json({
-        message: "Unauthorization",
-      });
-    }
-
     let page = parseInt(req.query.page) || 1;
     let limit = parseInt(req.query.limit) || 5;
 
@@ -132,15 +118,52 @@ exports.getAllPraktikan = async function (req, res, next) {
   }
 };
 
-exports.getAllModules = (req, res) => {
-  const api_key = req.query.k;
-  let isApiKey = api_key === process.env.API_KEY;
-  if (!isApiKey) {
-    res.status(401).json({
-      message: "Unauthorization",
+exports.getPraktikanBySearch = async function (req, res, next) {
+  try {
+    let page = parseInt(req.query.page) || 1;
+    let limit = parseInt(req.query.limit) || 5;
+
+    let offset = 0;
+
+    const query = req.params.q;
+
+    await model.praktikumLab
+      .findAndCountAll({
+        where: {
+          [Op.or]: [
+            { nama: { [Op.like]: `%${query}%` } },
+            { nim: { [Op.like]: `%${query}%` } },
+            { prodi: { [Op.like]: `%${query}%` } },
+            { praktikum: { [Op.like]: `%${query}%` } },
+            { angkatan: { [Op.like]: `%${query}%` } },
+          ],
+        },
+        attributes: ["nama", "nim", "prodi", "praktikum", "angkatan"],
+        limit: limit,
+        offset: offset,
+      })
+      .then((result) => {
+        const totalPage = Math.ceil(result.count / limit);
+        offset = limit * (page - 1);
+        console.log(offset);
+        res.status(200).json({
+          message: "Praktikan ditemukan",
+          totalDitemukan: result.count,
+          totalPage: totalPage,
+          limit: limit,
+          currentPageNumber: page,
+          currentPageSize: result.length,
+          data: result.rows,
+        });
+      });
+  } catch (error) {
+    res.status(500).json({
+      message: error,
     });
   }
+};
 
+exports.getAllModules = (req, res) => {
   const baseUrl = `${process.env.API_URL}/v1/praktikum/files`;
   const directoryPath = "./resources/modul/";
 

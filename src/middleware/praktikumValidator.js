@@ -2,11 +2,12 @@ const { check } = require("express-validator");
 const model = require("../model/index");
 
 exports.praktikanValidator = [
+  check("ketua").not().isEmpty().withMessage("Ketua kelas tidak boleh kosong"),
   check("angkatan").not().isEmpty().withMessage("Angkatan tidak boleh kosong"),
-  //   check("keterangan")
-  //     .not()
-  //     .isEmpty()
-  //     .withMessage("Keterangan tidak boleh kosong"),
+  check("keterangan")
+    .not()
+    .isEmpty()
+    .withMessage("Keterangan tidak boleh kosong"),
   check("praktikum")
     .not()
     .isEmpty()
@@ -35,11 +36,11 @@ exports.praktikanValidator = [
     .withMessage("Email tidak valid")
     .exists()
     .withMessage("Email tidak boleh kosong"),
-  check("hp").not().isEmpty().withMessage("No Hp tidak boleh kosong"),
+  check("hp").not().isEmpty().withMessage("Telepon tidak boleh kosong"),
   check("prodi")
     .not()
     .isEmpty()
-    .withMessage("Prodi tidak boleh kosong")
+    .withMessage("Prgram studi tidak boleh kosong")
     .isLength({ max: 24 })
     .withMessage("Masukkan prodi yang sesuai"),
   check("nim")
@@ -66,7 +67,10 @@ exports.praktikanValidator = [
           });
       });
     }),
-  check("gender").not().isEmpty().withMessage("Gender tidak boleh kosong"),
+  check("gender")
+    .not()
+    .isEmpty()
+    .withMessage("Jenis kelamin tidak boleh kosong"),
   check("nama")
     .not()
     .isEmpty()

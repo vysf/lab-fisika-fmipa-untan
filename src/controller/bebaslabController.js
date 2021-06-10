@@ -1,4 +1,5 @@
 const model = require("../model/index");
+const { Op } = require("sequelize");
 const { v4: uuidv4 } = require("uuid");
 const { validationResult } = require("express-validator");
 const mail = require("../middleware/mailer");
@@ -7,15 +8,6 @@ dotenv.config();
 
 exports.createRegister = async function (req, res, next) {
   try {
-    const api_key = req.query.k;
-    let isApiKey = api_key === process.env.API_KEY;
-    if (!isApiKey) {
-      // res.redirect("URL_FRONT_END");
-      res.status(401).json({
-        message: "Unauthorization",
-      });
-    }
-
     const error = validationResult(req);
     if (!error.isEmpty()) {
       return res.status(400).json({ message: error.array() });
@@ -39,12 +31,12 @@ exports.createRegister = async function (req, res, next) {
       })
       .then((result) => {
         model.bebasLab.findOne({ where: { nim: result.nim } }).then((data) => {
-          mail(
-            data,
-            "BEBAS_LAB",
-            "Konfirmasi Pendaftaran Surat Bebas Lab Fisika",
-            "Pendaftaran Surat Bebas Lab Fisika"
-          );
+          // mail(
+          //   data,
+          //   "BEBAS_LAB",
+          //   "Konfirmasi Pendaftaran Surat Bebas Lab Fisika",
+          //   "Pendaftaran Surat Bebas Lab Fisika"
+          // );
         });
 
         res.status(200).json({
@@ -66,14 +58,6 @@ exports.createRegister = async function (req, res, next) {
 
 exports.getAllRegisters = async function (req, res, next) {
   try {
-    const api_key = req.query.k;
-    let isApiKey = api_key === process.env.API_KEY;
-    if (!isApiKey) {
-      res.status(401).json({
-        message: "Unauthorization",
-      });
-    }
-
     let page = parseInt(req.query.page) || 1;
     let limit = parseInt(req.query.limit) || 5;
 
@@ -118,16 +102,53 @@ exports.getAllRegisters = async function (req, res, next) {
   }
 };
 
+exports.getRegistersBySearch = async function (req, res, next) {
+  try {
+    let page = parseInt(req.query.page) || 1;
+    let limit = parseInt(req.query.limit) || 5;
+
+    let offset = 0;
+
+    const query = req.params.q;
+
+    await model.bebasLab
+      .findAndCountAll({
+        where: {
+          [Op.or]: [
+            { nama: { [Op.like]: `%${query}%` } },
+            { nim: { [Op.like]: `%${query}%` } },
+            { prodi: { [Op.like]: `%${query}%` } },
+            { status: { [Op.like]: `%${query}%` } },
+            { nomorRegistrasi: { [Op.like]: `%${query}%` } },
+          ],
+        },
+        attributes: ["nama", "nim", "prodi", "status", "nomorRegistrasi"],
+        limit: limit,
+        offset: offset,
+      })
+      .then((result) => {
+        // console.log(result);
+        const totalPage = Math.ceil(result.count / limit);
+        offset = limit * (page - 1);
+        res.status(200).json({
+          message: "Mahasiswa ditemukan",
+          totalDitemukan: result.count,
+          totalPage: totalPage,
+          limit: limit,
+          currentPageNumber: page,
+          currentPageSize: result.length,
+          data: result.rows,
+        });
+      });
+  } catch (error) {
+    res.status(500).json({
+      message: error,
+    });
+  }
+};
+
 exports.updateRegisters = async function (req, res, next) {
   try {
-    const api_key = req.query.k;
-    let isApiKey = api_key === process.env.API_KEY;
-    if (!isApiKey) {
-      res.status(401).json({
-        message: "Unauthorization",
-      });
-    }
-
     const id = req.params.id;
     const status = req.body.status;
     await model.bebasLab
