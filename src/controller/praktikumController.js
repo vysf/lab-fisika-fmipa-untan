@@ -11,7 +11,7 @@ exports.createPraktikan = async function (req, res, next) {
   try {
     const error = validationResult(req);
     if (!error.isEmpty()) {
-      console.log(error.array());
+      // console.log(error.array());
       return res.status(400).json({ message: error.array() });
     }
 

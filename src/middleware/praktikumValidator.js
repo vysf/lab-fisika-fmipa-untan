@@ -1,9 +1,18 @@
 const { check } = require("express-validator");
 const model = require("../model/index");
 
+const date = new Date();
+let minDate = date.getFullYear() - 7;
+let maxDate = date.getFullYear();
+
 exports.praktikanValidator = [
-  check("ketua").not().isEmpty().withMessage("Ketua kelas tidak boleh kosong"),
-  check("angkatan").not().isEmpty().withMessage("Angkatan tidak boleh kosong"),
+  check("ketua").not().isEmpty().withMessage("Ketua kelas harus diisi"),
+  check("angkatan")
+    .isInt({ min: minDate, max: maxDate })
+    .withMessage(`Isi angkatan antara ${minDate} sampai ${maxDate}`)
+    .not()
+    .isEmpty()
+    .withMessage("Angkatan tidak boleh kosong"),
   check("keterangan")
     .not()
     .isEmpty()
@@ -24,7 +33,11 @@ exports.praktikanValidator = [
                 result.dataValues.praktikum === praktikumExist &&
                 result.dataValues.nim === req.body.nim
               ) {
-                reject(new Error("Praktikan sudah terdaftar"));
+                reject(
+                  new Error(
+                    `Praktikan dengan praktikum ${result.dataValues.praktikum} dan nim ${result.dataValues.nim} sudah terdaftar`
+                  )
+                );
               }
             }
           });
@@ -61,7 +74,11 @@ exports.praktikanValidator = [
                 result.dataValues.nim === nimExist &&
                 result.dataValues.praktikum === req.body.praktikum
               ) {
-                reject(new Error("Praktikan sudah terdaftar"));
+                reject(
+                  new Error(
+                    `Praktikan dengan nim ${result.dataValues.nim} dan praktikum ${result.dataValues.praktikum} sudah terdaftar`
+                  )
+                );
               }
             }
           });
