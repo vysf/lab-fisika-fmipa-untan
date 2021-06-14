@@ -53,14 +53,14 @@ exports.praktikanValidator = [
   check("prodi")
     .not()
     .isEmpty()
-    .withMessage("Prgram studi tidak boleh kosong")
+    .withMessage("Program studi tidak boleh kosong")
     .isLength({ max: 24 })
     .withMessage("Masukkan prodi yang sesuai"),
   check("nim")
     .not()
     .isEmpty()
     .withMessage("NIM tidak boleh kosong")
-    .isLength({ max: 11 })
+    .isLength({ max: 11, min: 11 })
     .withMessage("Masukkan NIM yang benar")
     .custom((nimExist, { req }) => {
       return new Promise((resolve, reject) => {
