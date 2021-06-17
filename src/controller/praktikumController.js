@@ -5,6 +5,7 @@ const { validationResult } = require("express-validator");
 const mail = require("../middleware/mailer");
 const fs = require("fs");
 const dotenv = require("dotenv");
+const path = require("path");
 dotenv.config();
 
 exports.createPraktikan = async function (req, res, next) {
@@ -178,7 +179,17 @@ exports.getAllModules = (req, res) => {
     let fileInfos = [];
 
     files.forEach((file) => {
+      const fileNameWithoutExt = path.parse(file).name;
+      const words = fileNameWithoutExt.split("-");
+
+      for (let i = 0; i < words.length; i++) {
+        words[i] = words[i][0].toUpperCase() + words[i].substr(1);
+      }
+
+      const title = words.join(" ");
+
       fileInfos.push({
+        title: title,
         name: file,
         url: `${baseUrl}/${file}`,
       });
