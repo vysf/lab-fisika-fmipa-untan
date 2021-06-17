@@ -125,6 +125,7 @@ exports.getRegistersBySearch = async function (req, res, next) {
         attributes: ["nama", "nim", "prodi", "status", "nomorRegistrasi"],
         limit: limit,
         offset: offset,
+        order: [["createdAt", "DESC"]],
       })
       .then((result) => {
         // console.log(result);

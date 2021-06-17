@@ -98,6 +98,7 @@ exports.getAllPraktikan = async function (req, res, next) {
           ],
           limit: limit,
           offset: offset,
+          order: [["createdAt", "DESC"]],
         })
         .then((result) => {
           res.status(200).json({
