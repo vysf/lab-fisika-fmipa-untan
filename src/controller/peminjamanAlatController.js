@@ -1,5 +1,7 @@
 const fs = require("fs");
 const dotenv = require("dotenv");
+const path = require("path");
+const convertBytes = require("../utils/convertBytes");
 dotenv.config();
 
 exports.getAllLetter = (req, res) => {
@@ -16,8 +18,23 @@ exports.getAllLetter = (req, res) => {
     let fileInfos = [];
 
     files.forEach((file) => {
+      const fileNameWithoutExt = path.parse(file).name;
+      const words = fileNameWithoutExt.split("-");
+
+      for (let i = 0; i < words.length; i++) {
+        words[i] = words[i][0].toUpperCase() + words[i].substr(1);
+      }
+
+      const title = words.join(" ");
+
+      const fileSize = convertBytes.convertBytes(
+        fs.statSync(`${directoryPath}/${file}`).size
+      );
+
       fileInfos.push({
+        title: title,
         name: file,
+        size: fileSize,
         url: `${baseUrl}/${file}`,
       });
     });

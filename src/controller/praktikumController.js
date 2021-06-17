@@ -6,6 +6,7 @@ const mail = require("../middleware/mailer");
 const fs = require("fs");
 const dotenv = require("dotenv");
 const path = require("path");
+const convertBytes = require("../utils/convertBytes");
 dotenv.config();
 
 exports.createPraktikan = async function (req, res, next) {
@@ -188,10 +189,16 @@ exports.getAllModules = (req, res) => {
 
       const title = words.join(" ");
 
+      const fileSize = convertBytes.convertBytes(
+        fs.statSync(`${directoryPath}/${file}`).size
+      );
+
       fileInfos.push({
         title: title,
         name: file,
-        url: `${baseUrl}/${file}`,
+        size: fileSize,
+        // url: `${baseUrl}/${file}`,
+        url: `${file}`,
       });
     });
 
