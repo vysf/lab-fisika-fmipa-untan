@@ -30,7 +30,9 @@ exports.registerValidator = [
       return new Promise((resolve, reject) => {
         model.bebasLab.findOne({ where: { nim: nimExist } }).then((result) => {
           if (result !== null) {
-            reject(new Error("Mahasiswa sudah terdaftar"));
+            reject(
+              new Error(`Mahasiswa dengan nim ${nimExist} sudah terdaftar`)
+            );
           } else {
             resolve(true);
           }

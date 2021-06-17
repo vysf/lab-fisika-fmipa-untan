@@ -82,6 +82,7 @@ exports.getAllRegisters = async function (req, res, next) {
           ],
           limit: limit,
           offset: offset,
+          order: [["createdAt", "DESC"]],
         })
         .then((result) => {
           res.status(200).json({
@@ -125,7 +126,6 @@ exports.getRegistersBySearch = async function (req, res, next) {
         attributes: ["nama", "nim", "prodi", "status", "nomorRegistrasi"],
         limit: limit,
         offset: offset,
-        order: [["createdAt", "DESC"]],
       })
       .then((result) => {
         // console.log(result);

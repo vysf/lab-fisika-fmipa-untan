@@ -1,7 +1,12 @@
 const { check } = require("express-validator");
 
 exports.pemohonValidator = [
-  check("tahun").not().isEmpty().withMessage("Tahun tidak boleh kosong"),
+  check("tahun")
+    .not()
+    .isEmpty()
+    .withMessage("Tahun tidak boleh kosong")
+    .isLength({ max: 255 })
+    .withMessage("Tahun terlalu banyak"),
   check("email")
     .isEmail()
     .withMessage("Email tidak valid")
