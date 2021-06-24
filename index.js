@@ -41,11 +41,21 @@ const speedLimiter = slowDown({
 //  apply to all requests
 app.use(speedLimiter);
 
+const apiKeyValidator = require("./src/middleware/apiKeyValidator");
+
 // Grouping
-app.use("/v1/bebaslab", bebaslabRouter);
-app.use("/v1/praktikum", praktikumRouter);
-app.use("/v1/peminjamanalat", peminjamanAlatRouter);
-app.use("/v1/permohonannilai", permohonanNilaiRouter);
+app.use("/v1/bebaslab", apiKeyValidator.apiKeyValidator, bebaslabRouter);
+app.use("/v1/praktikum", apiKeyValidator.apiKeyValidator, praktikumRouter);
+app.use(
+  "/v1/peminjamanalat",
+  apiKeyValidator.apiKeyValidator,
+  peminjamanAlatRouter
+);
+app.use(
+  "/v1/permohonannilai",
+  apiKeyValidator.apiKeyValidator,
+  permohonanNilaiRouter
+);
 
 // app.use("/v1/bot", botTelegram);
 
