@@ -110,7 +110,7 @@ exports.getRegistersBySearch = async function (req, res, next) {
 
     let offset = 0;
 
-    const query = req.params.q;
+    const query = req.query.q;
 
     await model.bebasLab
       .findAndCountAll({
@@ -124,7 +124,7 @@ exports.getRegistersBySearch = async function (req, res, next) {
           ],
         },
         attributes: ["nama", "nim", "prodi", "status", "nomorRegistrasi"],
-        limit: limit,
+        // limit: limit,
         offset: offset,
       })
       .then((result) => {
@@ -132,13 +132,21 @@ exports.getRegistersBySearch = async function (req, res, next) {
         const totalPage = Math.ceil(result.count / limit);
         offset = limit * (page - 1);
         res.status(200).json({
-          message: "Mahasiswa ditemukan",
-          totalDitemukan: result.count,
-          totalPage: totalPage,
-          limit: limit,
+          message:
+            query.length <= 0 || result.count <= 0 || undefined
+              ? "Mahasiswa tidak ditemukan"
+              : "Mahasiswa ditemukan",
+          totalDitemukan: query.length <= 0 ? 0 : result.count,
+          totalPage: query.length <= 0 ? 0 : totalPage,
+          // limit: limit,
           currentPageNumber: page,
           currentPageSize: result.length,
-          data: result.rows,
+          data: query.length <= 0 ? [] : result.rows,
+        });
+      })
+      .catch((err) => {
+        res.status(404).json({
+          message: "tidak ditemukan",
         });
       });
   } catch (error) {

@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const dotenv = require("dotenv");
+const slowDown = require("express-slow-down");
 
 const bebaslabRouter = require("./src/routes/bebaslabRouter");
 const praktikumRouter = require("./src/routes/praktikumRouter");
@@ -24,6 +25,21 @@ app.use(
     optionsSuccessStatus: 200,
   })
 );
+
+// app.enable("trust proxy"); // only if you're behind a reverse proxy (Heroku, Bluemix, AWS if you use an ELB, custom Nginx setup, etc)
+
+const speedLimiter = slowDown({
+  windowMs: 60 * 1000, // 15 minutes
+  delayAfter: 1, // allow 100 requests per 15 minutes, then...
+  delayMs: 700, // begin adding 500ms of delay per request above 100:
+  // request # 101 is delayed by  500ms
+  // request # 102 is delayed by 1000ms
+  // request # 103 is delayed by 1500ms
+  // etc.
+});
+
+//  apply to all requests
+app.use(speedLimiter);
 
 // Grouping
 app.use("/v1/bebaslab", bebaslabRouter);

@@ -5,7 +5,7 @@ const convertBytes = require("../utils/convertBytes");
 dotenv.config();
 
 exports.getAllLetter = (req, res) => {
-  const baseUrl = `${process.env.API_URL}/v1/peminjamanalat/files`;
+  // const baseUrl = `${process.env.API_URL}/v1/peminjamanalat/files`;
   const directoryPath = "./resources/peminjaman alat/";
 
   fs.readdir(directoryPath, function (err, files) {
@@ -35,7 +35,7 @@ exports.getAllLetter = (req, res) => {
         title: title,
         name: file,
         size: fileSize,
-        url: `${baseUrl}/${file}`,
+        // url: `${baseUrl}/${file}`,
       });
     });
 

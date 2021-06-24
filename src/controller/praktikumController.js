@@ -128,7 +128,9 @@ exports.getPraktikanBySearch = async function (req, res, next) {
 
     let offset = 0;
 
-    const query = req.params.q;
+    const query = req.query.q;
+    // console.log("ini query dari server: ", query);
+    console.log("ini query: ", query.length);
 
     await model.praktikumLab
       .findAndCountAll({
@@ -141,22 +143,31 @@ exports.getPraktikanBySearch = async function (req, res, next) {
             { angkatan: { [Op.like]: `%${query}%` } },
           ],
         },
-        attributes: ["nama", "nim", "prodi", "praktikum", "angkatan"],
-        limit: limit,
+        attributes: ["nama", "prodi", "praktikum", "angkatan"],
+        // limit: limit,
         offset: offset,
+        order: [["createdAt", "DESC"]],
       })
       .then((result) => {
         const totalPage = Math.ceil(result.count / limit);
         offset = limit * (page - 1);
         console.log(offset);
         res.status(200).json({
-          message: "Praktikan ditemukan",
-          totalDitemukan: result.count,
-          totalPage: totalPage,
-          limit: limit,
+          message:
+            query.length <= 0 || result.count <= 0 || undefined
+              ? "Praktikan tidak ditemukan"
+              : "Praktikan ditemukan",
+          totalDitemukan: query.length <= 0 ? 0 : result.count,
+          totalPage: query.length <= 0 ? 0 : totalPage,
+          // limit: limit,
           currentPageNumber: page,
           currentPageSize: result.length,
-          data: result.rows,
+          data: query.length <= 0 ? [] : result.rows,
+        });
+      })
+      .catch((err) => {
+        res.status(404).json({
+          message: "tidak ditemukan",
         });
       });
   } catch (error) {
@@ -167,7 +178,7 @@ exports.getPraktikanBySearch = async function (req, res, next) {
 };
 
 exports.getAllModules = (req, res) => {
-  const baseUrl = `${process.env.API_URL}/v1/praktikum/files`;
+  // const baseUrl = `${process.env.API_URL}/v1/praktikum/files`;
   const directoryPath = "./resources/modul/";
 
   fs.readdir(directoryPath, function (err, files) {
@@ -198,7 +209,6 @@ exports.getAllModules = (req, res) => {
         name: file,
         size: fileSize,
         // url: `${baseUrl}/${file}`,
-        url: `${file}`,
       });
     });
 

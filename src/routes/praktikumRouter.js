@@ -18,7 +18,7 @@ router.get(
 );
 
 router.get(
-  "/praktikan/:q",
+  "/praktikan/search",
   apiKeyValidator.apiKeyValidator,
   praktikumController.getPraktikanBySearch
 );

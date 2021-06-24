@@ -18,7 +18,7 @@ router.get(
 );
 
 router.get(
-  "/registers/:q",
+  "/registers/search",
   apiKeyValidator.apiKeyValidator,
   bebaslabController.getRegistersBySearch
 );
